@@ -178,7 +178,7 @@ export default function DeviceComponents({ espId }) {
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" width={148}>
                   Patient Id
                 </TableCell>
                 {editId ? (
@@ -223,12 +223,19 @@ export default function DeviceComponents({ espId }) {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      flexGrow: 1,
                     }}
                   >
-                    <Typography sx={{ p: "4px 0 5px" }}>
-                      {currDevice.patientId}
-                    </Typography>
-
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography
+                        sx={{
+                          p: "4px 0 5px",
+                          wordBreak: "break-all",
+                        }}
+                      >
+                        {currDevice.patientId}
+                      </Typography>
+                    </Box>
                     <Button variant="contained" onClick={() => setEditId(true)}>
                       EDIT
                     </Button>
@@ -361,3 +368,4 @@ export default function DeviceComponents({ espId }) {
     </Box>
   );
 }
+

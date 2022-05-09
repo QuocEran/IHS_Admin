@@ -55,7 +55,6 @@ export default function DeleteDevice({ open, handleClose }) {
   const devices = device((state) => state.devices);
   const [espId, setEspId] = React.useState("");
   const handleSubmit = (e) => {
-    e.preventDefault();
     projectFirestore
       .collection("esp")
       .doc(espId)
@@ -139,3 +138,4 @@ export default function DeleteDevice({ open, handleClose }) {
     </div>
   );
 }
+
