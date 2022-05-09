@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Container, Typography, List, ListItem } from "@mui/material";
+import {
+  Grid,
+  Container,
+  Typography,
+  List,
+  ListItem,
+  CircularProgress,
+} from "@mui/material";
 import DeviceCard from "../components/DeviceCard";
 import PatientCard from "../components/PatientCard";
 import StatsChart from "../components/StatsChart";
@@ -21,14 +28,17 @@ export default function Home() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [patientId, setPatientId] = React.useState("");
   const [espId, setEspId] = React.useState("");
+  const [isPending, setIsPending] = React.useState(true);
 
   useEffect(() => {
     projectFirestore.collection("patients").onSnapshot(async (snapshot) => {
-      setPatients(await snapshot.docs.map((doc) => doc.data()));
-      await setEspId(patients[0].espId);
-      await setPatientId(patients[0].patientId);
+      const response = await snapshot.docs.map((doc) => doc.data());
+      setPatients(response);
+      setEspId(response[0].espId);
+      setPatientId(response[0].patientId);
+      console.log(espId, patientId);
+      handleListItemClick(0, espId, patientId);
     });
-
     projectFirestore.collection("esp").onSnapshot(async (snapshot) => {
       setDevices(await snapshot.docs.map((doc) => doc.data()));
     });
@@ -36,6 +46,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    setIsPending(true);
     if ((patientId !== "") & (espId !== "")) {
       projectFirestore
         .collection("espData")
@@ -73,6 +84,7 @@ export default function Home() {
           );
         });
     }
+    setIsPending(false);
   }, [patientId, espId]);
 
   const handleListItemClick = (index, espId, patientId) => {
@@ -149,13 +161,18 @@ export default function Home() {
         <Grid
           item
           xs={8}
+          display="flex"
           justifyContent="center"
           alignItems="center"
           p="16px 8px"
           height={400}
           sx={{ border: "2px solid #eee" }}
         >
-          <StatsChart data={dataChart} dataRoom={dataRoom} />
+          {isPending ? (
+            <CircularProgress size={60} />
+          ) : (
+            <StatsChart data={dataChart} dataRoom={dataRoom} />
+          )}
         </Grid>
         {/* List patients */}
         <Grid
@@ -192,3 +209,4 @@ export default function Home() {
     </Container>
   );
 }
+
