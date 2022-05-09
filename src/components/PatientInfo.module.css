@@ -1,0 +1,13 @@
+.content {
+  border-radius: 4px;
+  border: 2px solid #eee;
+  padding: 16px;
+  display: flex;
+  width: 100%;
+  height: max-content;
+}
+
+.avatar {
+  width: 20%;
+  object-fit: contain;
+}

@@ -1,0 +1,10 @@
+.content {
+  border-radius: 4px;
+  border: 2px solid #eee;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+}
