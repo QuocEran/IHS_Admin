@@ -53,7 +53,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CreateDevice({ open, handleClose }) {
   const patients = patient((state) => state.patients);
-  const [isPending, setIsPending] = React.useState(true);
+  const [isPending, setIsPending] = React.useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const [mac, setMac] = React.useState("");
@@ -62,7 +62,7 @@ export default function CreateDevice({ open, handleClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setIsPending(true);
     const timeInstance = new Date().getTime() / 1000;
     const stamp = timeInstance.toString();
     projectFirestore
@@ -159,7 +159,12 @@ export default function CreateDevice({ open, handleClose }) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button type="submit" form="createForm" onClick={handleClose}>
+          <Button
+            type="submit"
+            form="createForm"
+            disabled={isPending}
+            onClick={handleClose}
+          >
             Save changes
           </Button>
         </DialogActions>
@@ -167,3 +172,4 @@ export default function CreateDevice({ open, handleClose }) {
     </div>
   );
 }
+
