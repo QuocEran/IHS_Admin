@@ -36,7 +36,6 @@ export default function Home() {
       setPatients(response);
       setEspId(response[0].espId);
       setPatientId(response[0].patientId);
-      console.log(espId, patientId);
       handleListItemClick(0, espId, patientId);
     });
     projectFirestore.collection("esp").onSnapshot(async (snapshot) => {

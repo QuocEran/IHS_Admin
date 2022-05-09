@@ -22,8 +22,13 @@ export default function Device() {
   const [isPending, setIsPending] = useState(true);
   useEffect(
     () => {
-      setCurrDecvice(0);
-      setIsPending(false);
+      device
+        .getState()
+        .getDevices()
+        .then(() => {
+          setCurrDecvice(0);
+          setIsPending(false);
+        });
     },
     //eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -59,7 +64,11 @@ export default function Device() {
   };
   return (
     <Grid container>
-      <DeleteDevice open={openDelete} handleClose={handleCloseDelete} />
+      <DeleteDevice
+        open={openDelete}
+        handleClose={handleCloseDelete}
+        setIsPending={setIsPending}
+      />
       <CreateDevice open={openCreate} handleClose={handleCloseCreate} />
       <SpeedDial
         ariaLabel="SpeedDial basic example"
@@ -90,7 +99,7 @@ export default function Device() {
             <CircularProgress />
           </Box>
         ) : (
-          <DeviceComponents espId={currDevice.espId} />
+          <DeviceComponents espId={currDevice?.espId} />
         )}
       </Grid>
       <Grid

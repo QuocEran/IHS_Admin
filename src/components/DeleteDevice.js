@@ -50,22 +50,27 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function DeleteDevice({ open, handleClose }) {
+export default function DeleteDevice({ open, handleClose, setIsPending }) {
   const { enqueueSnackbar } = useSnackbar();
   const devices = device((state) => state.devices);
   const [espId, setEspId] = React.useState("");
-  const handleSubmit = (e) => {
+  const handleDelete = async () => {
+    setIsPending(true);
     projectFirestore
       .collection("esp")
       .doc(espId)
       .delete()
-      .then(() => {
+      .then(async () => {
         enqueueSnackbar("Delete Device Successfully", {
           variant: "info",
           TransitionComponent: Slide,
           autoHideDuration: 3000,
           preventDuplicate: true,
         });
+        await device.getState().getDevices();
+        device.getState().addCurrDevice(0);
+        setIsPending(false);
+        handleClose();
       })
       .catch((error) => {
         enqueueSnackbar(error.message, {
@@ -75,8 +80,6 @@ export default function DeleteDevice({ open, handleClose }) {
           preventDuplicate: true,
         });
       });
-
-    device.getState().getDevices();
   };
   return (
     <div>
@@ -99,8 +102,6 @@ export default function DeleteDevice({ open, handleClose }) {
           }}
         >
           <Box
-            id="deleteForm"
-            component="form"
             sx={{
               // "& > :not(style)": { border: "1px solid #eee" },
               flexGrow: 1,
@@ -108,9 +109,6 @@ export default function DeleteDevice({ open, handleClose }) {
               flexDirection: "column",
               gap: "10px",
             }}
-            noValidate
-            autoComplete="off"
-            onSubmit={handleSubmit}
           >
             <RadioGroup
               aria-label="ringtone"
@@ -130,12 +128,9 @@ export default function DeleteDevice({ open, handleClose }) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button type="submit" form="deleteForm">
-            Save changes
-          </Button>
+          <Button onClick={handleDelete}>Save changes</Button>
         </DialogActions>
       </BootstrapDialog>
     </div>
   );
 }
-

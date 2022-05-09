@@ -16,8 +16,8 @@ let store = (set, get) => ({
       currDevice: get().devices[index],
     }));
   },
-  getDevices: () => {
-    projectFirestore.collection("esp").onSnapshot(async (snapshot) => {
+  getDevices: async () => {
+    await projectFirestore.collection("esp").onSnapshot(async (snapshot) => {
       const newDevices = await snapshot.docs.map((doc) => doc.data());
       set((state) => ({
         ...state,
@@ -28,3 +28,4 @@ let store = (set, get) => ({
 });
 store = persist(store, { name: "device" }); // Persist to local storage
 export default create(store);
+
