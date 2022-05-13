@@ -11,12 +11,12 @@ export default function PatientCard({
   index,
   handleListItemClick,
   diagnostic,
+  status,
   phone,
   name,
   espId,
   patientId,
 }) {
-
   return (
     <ListItem
       button
@@ -57,9 +57,19 @@ export default function PatientCard({
             >
               - {diagnostic}
             </Typography>
+            <Typography
+              component="div"
+              variant="body2"
+              color={status === "Alert" ? "red" : "primary"}
+              fontWeight={800}
+              fontSize={16}
+            >
+              {status}
+            </Typography>
           </React.Fragment>
         }
       />
     </ListItem>
   );
 }
+

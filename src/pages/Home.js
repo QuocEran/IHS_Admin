@@ -56,9 +56,9 @@ export default function Home() {
         .onSnapshot((snapshot) => {
           const lastData = snapshot.docs[snapshot.docs.length - 1];
           if (
-            (lastData.data().SP02 < 94) |
-            (lastData.data().Temp > 37) |
-            (lastData.data().HeartBeat > 100)
+            parseFloat(lastData.data().SPO2) < 94 ||
+            parseFloat(lastData.data().Temp) > 37 ||
+            parseFloat(lastData.data().HeartBeat) > 100
           ) {
             setDataRoom({
               Status: "Alert",
@@ -179,10 +179,11 @@ export default function Home() {
           xs={4}
           justifyContent="center"
           alignItems="center"
-          p={{ sm: 1, xs: 0.5 }}
           sx={{ border: "2px solid #eee" }}
         >
-          <Typography variant="h5">🤒 Patients</Typography>
+          <Typography variant="h5" p={{ sm: 1, xs: 0.5 }}>
+            🤒 Patients
+          </Typography>
           <List
             sx={{
               overflow: "auto",
@@ -198,6 +199,7 @@ export default function Home() {
                 phone={patient.phoneNumber}
                 name={patient.name}
                 diagnostic={patient.diagnostic}
+                status={patient.status}
                 espId={patient.espId}
                 patientId={patient.patientId}
               />

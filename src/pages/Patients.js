@@ -107,8 +107,8 @@ export default function Patients() {
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="SPO2" stroke="#8884d1" />
-                <Line type="monotone" dataKey="HeartBeat" stroke="#8884d8" />
-                <Line type="monotone" dataKey="Temp" stroke="#82ca9d" />
+                <Line type="monotone" dataKey="HeartBeat" stroke="#FF0000" />
+                <Line type="monotone" dataKey="Temp" stroke="#4cb373" />
               </LineChart>
             </ResponsiveContainer>
           </Box>
@@ -178,3 +178,4 @@ export default function Patients() {
     </Grid>
   );
 }
+

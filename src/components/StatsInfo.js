@@ -38,8 +38,8 @@ export default function StatsInfo({ data }) {
           },
           {
             image: humid,
-            value: data.RoomTemp,
-            status: data.RoomTemp > 35 ? "Alert" : "Normal",
+            value: data.Humid,
+            status: data.Humid > 75 || data.Humid < 40 ? "Alert" : "Normal",
             title: "%",
           },
         ];
@@ -82,3 +82,4 @@ export default function StatsInfo({ data }) {
     </>
   );
 }
+
