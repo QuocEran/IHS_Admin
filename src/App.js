@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import Home from "./pages/Home";
 import Patients from "./pages/Patients";
 import Device from "./pages/Device";
+import SignIn from "./pages/SignIn";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +29,9 @@ function App() {
             <Route path="/devices">
               <Device />
             </Route>
+            <Route path="/auth">
+              <SignIn />
+            </Route>
           </Switch>
         </Layout>
       </Router>
@@ -36,3 +40,4 @@ function App() {
 }
 
 export default App;
+

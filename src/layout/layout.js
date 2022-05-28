@@ -9,8 +9,8 @@ import {
   ListItemText,
   AppBar,
   Toolbar,
-  Avatar,
   CardMedia,
+  IconButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import {
@@ -18,13 +18,21 @@ import {
   PeopleOutline,
   DeveloperBoardOutlined,
   TodayOutlined,
+  ExitToAppOutlined,
 } from "@mui/icons-material";
 import { useHistory, useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import Logo from "../assets/images/logo.png";
+import { projectAuth } from "../configs/firebase";
+
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => {
   return {
+    auth: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
     root: {
       display: "flex",
     },
@@ -60,9 +68,19 @@ const useStyles = makeStyles((theme) => {
 });
 
 export default function Layout({ children }) {
+  const navigate = useHistory();
+  React.useEffect(() => {
+    projectAuth.onAuthStateChanged((authUser) => {
+      if (!authUser) {
+        navigate.push("/auth");
+      }
+    });
+  }, []);
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
+  const isAuth = location.pathname === "/auth" ? true : false;
+
   const menuItems = [
     {
       text: "Home",
@@ -83,82 +101,96 @@ export default function Layout({ children }) {
   ];
 
   return (
-    <div className={classes.root}>
-      {/* app bar */}
-      <AppBar className={classes.appbar} elevation={1}>
-        <Toolbar>
-          <Typography variant="h5" className={classes.date}>
-            IoT-Based Smart Health Monitoring System
-          </Typography>
-          <Typography>Guest</Typography>
-          <Avatar src="/ava.png" className={classes.avatar} />
-        </Toolbar>
-      </AppBar>
-      {/* side drawer */}
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        anchor="left"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <Box display="flex">
-          <CardMedia
-            component="img"
-            src={Logo}
-            alt=""
-            height={64}
-            sx={{
-              objectFit: "contain !important",
-              width: "fit-content",
-              px: "16px",
+    <>
+      {isAuth ? (
+        <div>{children}</div>
+      ) : (
+        <div className={classes.root}>
+          {/* app bar */}
+          <AppBar className={classes.appbar} elevation={1}>
+            <Toolbar>
+              <Typography variant="h5" className={classes.date}>
+                IoT-Based Smart Health Monitoring System
+              </Typography>
+              <IconButton
+                onClick={() => {
+                  projectAuth.signOut().then(() => history.push("/auth"));
+                }}
+              >
+                <Box color="#fff">
+                  <ExitToAppOutlined color="inherit" fontSize="large" />
+                </Box>
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          {/* side drawer */}
+          <Drawer
+            className={classes.drawer}
+            variant="permanent"
+            anchor="left"
+            classes={{
+              paper: classes.drawerPaper,
             }}
-          />
-          <Typography
-            variant="h5"
-            fontWeight={600}
-            className={classes.title}
-            flexGrow={1}
           >
-            IHS
-          </Typography>
-        </Box>
+            <Box display="flex">
+              <CardMedia
+                component="img"
+                src={Logo}
+                alt=""
+                height={64}
+                sx={{
+                  objectFit: "contain !important",
+                  width: "fit-content",
+                  px: "16px",
+                }}
+              />
+              <Typography
+                variant="h5"
+                fontWeight={600}
+                className={classes.title}
+                flexGrow={1}
+              >
+                IHS
+              </Typography>
+            </Box>
 
-        <List>
-          {menuItems.map((item) => (
-            <ListItem
-              button
-              onClick={() => history.push(item.path)}
-              key={item.text}
-              className={
-                location.pathname === item.path ? classes.active : null
-              }
+            <List>
+              {menuItems.map((item) => (
+                <ListItem
+                  button
+                  onClick={() => history.push(item.path)}
+                  key={item.text}
+                  className={
+                    location.pathname === item.path ? classes.active : null
+                  }
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItem>
+              ))}
+            </List>
+            <Box
+              p="16px"
+              display="flex"
+              alignItems="center"
+              gap="32px"
+              marginTop="auto"
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
-        </List>
-        <Box
-          p="16px"
-          display="flex"
-          alignItems="center"
-          gap="32px"
-          marginTop="auto"
-        >
-          <TodayOutlined />
-          <Typography className={classes.date}>
-            {format(new Date(), "do MMMM Y")}
-          </Typography>
-        </Box>
-      </Drawer>
+              <TodayOutlined />
+              <Typography className={classes.date}>
+                {format(new Date(), "do MMMM Y")}
+              </Typography>
+            </Box>
+          </Drawer>
 
-      {/* main content */}
-      <div className={classes.page}>
-        <div className={classes.toolbar}></div>
-        {children}
-      </div>
-    </div>
+          {/* main content */}
+          <div className={classes.page}>
+            <div className={classes.toolbar}></div>
+            {children}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
+
