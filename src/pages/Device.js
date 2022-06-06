@@ -85,7 +85,6 @@ export default function Device() {
           tooltipTitle="Delete Device"
           onClick={handleClickOpenDelete}
         />
-        ))}
       </SpeedDial>
       <Grid item xs={8} p={1} display="flex" flexDirection="column" gap="16px">
         {isPending ? (

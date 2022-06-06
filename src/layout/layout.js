@@ -75,6 +75,7 @@ export default function Layout({ children }) {
         navigate.push("/auth");
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const classes = useStyles();
   const history = useHistory();
