@@ -1,56 +1,46 @@
 import React, { useEffect, useState } from "react";
-import {
-  Grid,
-  Container,
-  Typography,
-  List,
-  ListItem,
-  CircularProgress,
-} from "@mui/material";
+import { Grid, Container, Typography, List, ListItem } from "@mui/material";
 import DeviceCard from "../components/DeviceCard";
 import PatientCard from "../components/PatientCard";
 import StatsChart from "../components/StatsChart";
 import { projectFirestore } from "../configs/firebase";
-
-import { timeConverter } from "../utilities/timeConvert";
 import patient from "../stores/patient";
 import device from "../stores/device";
+import { timeConverter } from "../utilities/timeConvert";
+import { useHistory, useParams } from "react-router-dom";
+
 export default function Home() {
   const patients = patient((state) => state.patients);
   const setPatients = patient((state) => state.addPatients);
-
   const devices = device((state) => state.devices);
   const setDevices = device((state) => state.addDevices);
 
-  const [dataChart, setDataChart] = useState([]);
-  const [dataRoom, setDataRoom] = useState({});
+  const params = useParams();
+  const history = useHistory();
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [patientId, setPatientId] = React.useState("");
-  const [espId, setEspId] = React.useState("");
+
+  const [data, setData] = useState([]);
+  const [dataRoom, setDataRoom] = useState({});
   const [isPending, setIsPending] = React.useState(true);
 
   useEffect(() => {
     projectFirestore.collection("patients").onSnapshot(async (snapshot) => {
       const response = await snapshot.docs.map((doc) => doc.data());
       setPatients(response);
-      setEspId(response[0].espId);
-      setPatientId(response[0].patientId);
-      handleListItemClick(0, espId, patientId);
     });
     projectFirestore.collection("esp").onSnapshot(async (snapshot) => {
       setDevices(await snapshot.docs.map((doc) => doc.data()));
     });
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
-    setIsPending(true);
-    if ((patientId !== "") & (espId !== "")) {
+    setSelectedIndex(params.espId);
+
+    try {
+      setIsPending(true);
       projectFirestore
         .collection("espData")
-        .doc(espId)
-        .collection(patientId)
+        .doc(params.espId)
+        .collection(params.patientId)
         .orderBy("TimeStamp", "asc")
         .limitToLast(10)
         .onSnapshot((snapshot) => {
@@ -73,7 +63,7 @@ export default function Home() {
             });
           }
 
-          setDataChart(
+          setData(
             snapshot.docs.map((doc) => ({
               name: timeConverter(doc.id),
               SPO2: doc.data().SPO2,
@@ -82,14 +72,18 @@ export default function Home() {
             }))
           );
         });
+      setIsPending(false);
+    } catch (error) {
+      console.log(error);
     }
-    setIsPending(false);
-  }, [patientId, espId]);
+
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleListItemClick = (index, espId, patientId) => {
-    setSelectedIndex(index);
-    setEspId(espId);
-    setPatientId(patientId);
+    history.push("/home/" + espId + "/" + patientId);
+    setSelectedIndex(espId);
+    window.location.reload();
   };
 
   return (
@@ -167,11 +161,7 @@ export default function Home() {
           height={400}
           sx={{ border: "2px solid #eee" }}
         >
-          {isPending ? (
-            <CircularProgress size={60} />
-          ) : (
-            <StatsChart data={dataChart} dataRoom={dataRoom} />
-          )}
+          <StatsChart isPending={isPending} data={data} dataRoom={dataRoom} />
         </Grid>
         {/* List patients */}
         <Grid
@@ -193,13 +183,12 @@ export default function Home() {
             {patients.map((patient, index) => (
               <PatientCard
                 key={index}
-                index={index}
+                index={patient.espId}
                 handleListItemClick={handleListItemClick}
                 selectedIndex={selectedIndex}
                 phone={patient.phoneNumber}
                 name={patient.name}
                 diagnostic={patient.diagnostic}
-                status={patient.status}
                 espId={patient.espId}
                 patientId={patient.patientId}
               />

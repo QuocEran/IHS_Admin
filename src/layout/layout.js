@@ -85,7 +85,7 @@ export default function Layout({ children }) {
     {
       text: "Home",
       icon: <HomeOutlined color="secondary" />,
-      path: "/",
+      path: "/home",
     },
 
     {
@@ -161,7 +161,7 @@ export default function Layout({ children }) {
                   onClick={() => history.push(item.path)}
                   key={item.text}
                   className={
-                    location.pathname === item.path ? classes.active : null
+                    location.pathname.match(item.path) ? classes.active : null
                   }
                 >
                   <ListItemIcon>{item.icon}</ListItemIcon>

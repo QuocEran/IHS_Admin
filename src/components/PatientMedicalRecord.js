@@ -9,6 +9,8 @@ import {
   Button,
   OutlinedInput,
   Slide,
+  Typography,
+  Divider,
 } from "@mui/material";
 import { projectFirestore } from "../configs/firebase";
 import { useSnackbar } from "notistack";
@@ -25,6 +27,7 @@ export default function PatientMedicalRecord({
     weight: "",
     height: "",
     notes: "",
+    address: "",
   });
 
   const { enqueueSnackbar } = useSnackbar();
@@ -40,7 +43,6 @@ export default function PatientMedicalRecord({
         setCurrPatient(await snapshot.data());
         setIsPending(false);
       });
-
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPending, patientId]);
 
@@ -53,6 +55,7 @@ export default function PatientMedicalRecord({
       weight: currPatient?.weight,
       height: currPatient?.height,
       notes: currPatient?.notes,
+      address: currPatient?.address,
     });
   }, [currPatient]);
 
@@ -106,25 +109,13 @@ export default function PatientMedicalRecord({
           <Grid container spacing={2}>
             <Grid item md={6}>
               <InputLabel sx={{ marginBottom: 1 }}>ESP ID</InputLabel>
-              <TextField
-                variant="standard"
-                inputProps={{
-                  readOnly: true,
-                }}
-                fullWidth
-                defaultValue={inputValue.espId}
-              />
+              <Typography gutterBottom>{inputValue.espId}</Typography>
+              <Divider />
             </Grid>
             <Grid item md={6}>
               <InputLabel sx={{ marginBottom: 1 }}>Patient ID</InputLabel>
-              <TextField
-                variant="standard"
-                inputProps={{
-                  readOnly: true,
-                }}
-                fullWidth
-                defaultValue={inputValue.patientId}
-              />
+              <Typography gutterBottom>{inputValue.patientId}</Typography>
+              <Divider />
             </Grid>
             <Grid item md={6}>
               <InputLabel sx={{ marginBottom: 1 }}>Diagnostic</InputLabel>
@@ -225,6 +216,11 @@ export default function PatientMedicalRecord({
                 inputProps={{ "aria-label": "description" }}
                 // onChange={(e) => setInputValue(e.target.value)}
               />
+            </Grid>
+            <Grid item md={12}>
+              <InputLabel sx={{ marginBottom: 1 }}>Note</InputLabel>
+              <Typography gutterBottom>{inputValue.address}</Typography>
+              <Divider />
             </Grid>
           </Grid>
           {isEditing ? (

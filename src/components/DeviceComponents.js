@@ -46,7 +46,10 @@ export default function DeviceComponents({ espId }) {
           patientId: inputValue,
           createdDate: stamp,
         })
-        .then(() => {
+        .then(async () => {
+          await projectFirestore.collection("patients").doc(inputValue).update({
+            espId: espId,
+          });
           enqueueSnackbar("Patient Id Successfully Updated!", {
             variant: "success",
             anchorOrigin: {
@@ -368,4 +371,3 @@ export default function DeviceComponents({ espId }) {
     </Box>
   );
 }
-

@@ -76,11 +76,11 @@ export default function PatientInfo({ data }) {
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: "5px" }}>
                   <PhoneRounded />
-                  <Typography>0933168844</Typography>
+                  <Typography>{data?.phoneNumber}</Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: "5px" }}>
                   <LocalHospitalRounded />
-                  <Typography>Insomnia</Typography>
+                  <Typography>{data?.diagnostic}</Typography>
                 </Box>
               </Stack>
             </Grid>
@@ -107,3 +107,4 @@ export default function PatientInfo({ data }) {
     </>
   );
 }
+

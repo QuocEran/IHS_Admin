@@ -7,7 +7,8 @@ import oxygen from "../assets/images/oxygen.png";
 import roomTemp from "../assets/images/room-temp.png";
 import humid from "../assets/images/humidity.png";
 import { CircularProgress } from "@mui/material";
-export default function StatsInfo({ data }) {
+
+export default function StatsInfo({ isNotFound, data }) {
   const stats =
     data === null
       ? null
@@ -43,41 +44,46 @@ export default function StatsInfo({ data }) {
             title: "%",
           },
         ];
+
   return (
     <>
-      {data === null ? (
-        <Box
-          minHeight="20vh"
-          width="100%"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Grid container spacing={1}>
-          {stats.map((item, index) => (
-            <Grid item md={2.4} key={index}>
-              <Box className={styles.content}>
-                <Typography
-                  textAlign="center"
-                  color={item.status === "Alert" ? "error" : "primary"}
-                  fontWeight={600}
-                >
-                  {item.status}
-                </Typography>
-                <Box display="flex" alignItems="center" gap="5px">
-                  <Avatar variant="square" src={item.image} alt="" />
-                  <Typography fontWeight={600} fontSize={20}>
-                    {item.value}
-                  </Typography>
-                  <Typography fontSize={18}>{item.title}</Typography>
-                </Box>
-              </Box>
+      {isNotFound ? null : (
+        <>
+          {data === null ? (
+            <Box
+              minHeight="20vh"
+              width="100%"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Grid container spacing={1}>
+              {stats.map((item, index) => (
+                <Grid item md={2.4} key={index}>
+                  <Box className={styles.content}>
+                    <Typography
+                      textAlign="center"
+                      color={item.status === "Alert" ? "error" : "primary"}
+                      fontWeight={600}
+                    >
+                      {item.status}
+                    </Typography>
+                    <Box display="flex" alignItems="center" gap="5px">
+                      <Avatar variant="square" src={item.image} alt="" />
+                      <Typography fontWeight={600} fontSize={20}>
+                        {item.value}
+                      </Typography>
+                      <Typography fontSize={18}>{item.title}</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          )}
+        </>
       )}
     </>
   );
