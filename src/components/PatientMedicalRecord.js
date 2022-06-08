@@ -218,7 +218,7 @@ export default function PatientMedicalRecord({
               />
             </Grid>
             <Grid item md={12}>
-              <InputLabel sx={{ marginBottom: 1 }}>Note</InputLabel>
+              <InputLabel sx={{ marginBottom: 1 }}>Address</InputLabel>
               <Typography gutterBottom>{inputValue.address}</Typography>
               <Divider />
             </Grid>
