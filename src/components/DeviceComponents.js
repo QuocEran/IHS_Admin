@@ -12,6 +12,8 @@ import {
   IconButton,
   CircularProgress,
   Slide,
+  MenuItem,
+  TextField,
 } from "@mui/material";
 import React from "react";
 import { useSnackbar } from "notistack";
@@ -22,7 +24,10 @@ import {
   CheckCircleOutlineOutlined,
   CancelOutlined,
 } from "@mui/icons-material";
+import patient from "../stores/patient";
+
 export default function DeviceComponents({ espId }) {
+  const patients = patient((state) => state.patients);
   const { enqueueSnackbar } = useSnackbar();
 
   const [editId, setEditId] = React.useState(false);
@@ -197,12 +202,25 @@ export default function DeviceComponents({ espId }) {
                       autoComplete="off"
                       onSubmit={handleSubmit}
                     >
-                      <Input
-                        fullWidth
+                      <TextField
+                        variant="standard"
+                        label="Select patient"
                         placeholder="Enter Patient Id"
-                        inputProps={{ "aria-label": "description" }}
+                        select
+                        fullWidth
                         onChange={(e) => setInputValue(e.target.value)}
-                      />
+                      >
+                        {patients?.map((option) => (
+                          <MenuItem
+                            disabled={option.espId !== ""}
+                            key={option.patientId}
+                            value={option.patientId}
+                          >
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+
                       <IconButton
                         type="submit"
                         component="button"

@@ -67,6 +67,8 @@ export default function Patients() {
           if (lastData) {
             setLastData(lastData.data());
             setIsNotFound(false);
+          } else {
+            setIsNotFound(true);
           }
         });
     } catch (error) {

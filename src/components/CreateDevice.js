@@ -151,7 +151,11 @@ export default function CreateDevice({ open, handleClose }) {
               onChange={(e) => setPatientId(e.target.value)}
             >
               {patients?.map((option) => (
-                <MenuItem key={option.patientId} value={option.patientId}>
+                <MenuItem
+                  disabled={option.espId !== ""}
+                  key={option.patientId}
+                  value={option.patientId}
+                >
                   {option.name}
                 </MenuItem>
               ))}
@@ -172,4 +176,3 @@ export default function CreateDevice({ open, handleClose }) {
     </div>
   );
 }
-

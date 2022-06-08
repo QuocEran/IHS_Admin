@@ -72,7 +72,15 @@ export default function PatientMedicalRecord({
         height: inputValue.height,
         notes: inputValue.notes === undefined ? "" : inputValue.notes,
       })
-      .then(() => {
+      .then(async () => {
+        if (inputValue.espId.trim() === "") {
+          await projectFirestore
+            .collection("patients")
+            .doc(currPatient.patientId)
+            .update({
+              espId: "",
+            });
+        }
         enqueueSnackbar("Patient Id Successfully Updated!", {
           variant: "success",
           TransitionComponent: Slide,
@@ -98,7 +106,6 @@ export default function PatientMedicalRecord({
         <Box
           component="form"
           sx={{
-            // "& > :not(style)": { border: "1px solid #eee" },
             flexGrow: 1,
           }}
           noValidate
@@ -108,17 +115,55 @@ export default function PatientMedicalRecord({
         >
           <Grid container spacing={2}>
             <Grid item md={6}>
-              <InputLabel sx={{ marginBottom: 1 }}>ESP ID</InputLabel>
-              <Typography gutterBottom>{inputValue.espId}</Typography>
-              <Divider />
+              <InputLabel
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: isEditing ? "bolder" : null,
+                }}
+              >
+                ESP ID
+              </InputLabel>
+              <TextField
+                variant="standard"
+                InputProps={{
+                  readOnly: isEditing ? false : true,
+                }}
+                fullWidth
+                defaultValue={currPatient?.espId}
+                value={inputValue.espId}
+                onChange={(e) =>
+                  setInputValue((prev) => ({
+                    ...prev,
+                    espId: e.target.value,
+                  }))
+                }
+                // onChange={(e) => setInputValue(e.target.value)}
+              />
             </Grid>
             <Grid item md={6}>
-              <InputLabel sx={{ marginBottom: 1 }}>Patient ID</InputLabel>
-              <Typography gutterBottom>{inputValue.patientId}</Typography>
-              <Divider />
+              <InputLabel
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: isEditing ? "bolder" : null,
+                }}
+              >
+                Patient ID
+              </InputLabel>
+
+              <Typography color="primary" gutterBottom>
+                {inputValue.patientId}
+              </Typography>
+              <Divider sx={{ borderBottomWidth: "2px", paddingTop: "1px" }} />
             </Grid>
             <Grid item md={6}>
-              <InputLabel sx={{ marginBottom: 1 }}>Diagnostic</InputLabel>
+              <InputLabel
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: isEditing ? "bolder" : null,
+                }}
+              >
+                Diagnostic
+              </InputLabel>
               <TextField
                 variant="outlined"
                 InputProps={{
@@ -139,7 +184,14 @@ export default function PatientMedicalRecord({
             </Grid>
 
             <Grid item md={6}>
-              <InputLabel sx={{ marginBottom: 1 }}>Blood</InputLabel>
+              <InputLabel
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: isEditing ? "bolder" : null,
+                }}
+              >
+                Blood
+              </InputLabel>
               <TextField
                 variant="outlined"
                 inputProps={{
@@ -157,7 +209,14 @@ export default function PatientMedicalRecord({
               />
             </Grid>
             <Grid item md={6}>
-              <InputLabel sx={{ marginBottom: 1 }}>Weight</InputLabel>
+              <InputLabel
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: isEditing ? "bolder" : null,
+                }}
+              >
+                Weight
+              </InputLabel>
               <OutlinedInput
                 inputProps={{
                   readOnly: isEditing ? false : true,
@@ -177,7 +236,14 @@ export default function PatientMedicalRecord({
               />
             </Grid>
             <Grid item md={6}>
-              <InputLabel sx={{ marginBottom: 1 }}>Height</InputLabel>
+              <InputLabel
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: isEditing ? "bolder" : null,
+                }}
+              >
+                Height
+              </InputLabel>
               <OutlinedInput
                 inputProps={{
                   readOnly: isEditing ? false : true,
@@ -197,7 +263,14 @@ export default function PatientMedicalRecord({
               />
             </Grid>
             <Grid item md={12}>
-              <InputLabel sx={{ marginBottom: 1 }}>Note</InputLabel>
+              <InputLabel
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: isEditing ? "bolder" : null,
+                }}
+              >
+                Note
+              </InputLabel>
               <TextField
                 variant="outlined"
                 InputProps={{
@@ -218,7 +291,14 @@ export default function PatientMedicalRecord({
               />
             </Grid>
             <Grid item md={12}>
-              <InputLabel sx={{ marginBottom: 1 }}>Address</InputLabel>
+              <InputLabel
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: isEditing ? "bolder" : null,
+                }}
+              >
+                Address
+              </InputLabel>
               <Typography gutterBottom>{inputValue.address}</Typography>
               <Divider />
             </Grid>
