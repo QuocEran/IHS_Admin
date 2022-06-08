@@ -48,7 +48,9 @@ export default function Home() {
           if (
             parseFloat(lastData.data().SPO2) < 94 ||
             parseFloat(lastData.data().Temp) > 37 ||
-            parseFloat(lastData.data().HeartBeat) > 100
+            parseFloat(lastData.data().Temp) < 35 ||
+            parseFloat(lastData.data().HeartBeat) > 100 ||
+            parseFloat(lastData.data().HeartBeat) < 40
           ) {
             setDataRoom({
               Status: "Alert",

@@ -16,13 +16,14 @@ export default function StatsInfo({ isNotFound, data }) {
           {
             image: heartbeat,
             value: data.HeartBeat,
-            status: data.HeartBeat > 100 ? "Alert" : "Normal",
+            status:
+              data.HeartBeat > 100 || data.HeartBeat < 40 ? "Alert" : "Normal",
             title: "BPM",
           },
           {
             image: temp,
             value: data.Temp,
-            status: data.Temp > 37 ? "Alert" : "Normal",
+            status: data.Temp > 37 || data.Temp < 35 ? "Alert" : "Normal",
             title: "\u00b0C",
           },
           {
@@ -34,7 +35,8 @@ export default function StatsInfo({ isNotFound, data }) {
           {
             image: roomTemp,
             value: data.RoomTemp,
-            status: data.RoomTemp > 35 ? "Alert" : "Normal",
+            status:
+              data.RoomTemp > 35 || data.RoomTemp < 15 ? "Alert" : "Normal",
             title: "\u00b0C",
           },
           {
